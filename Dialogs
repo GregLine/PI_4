@@ -1,0 +1,32 @@
+package com.company.view;
+
+import com.company.entity.Film;
+import com.company.entity.Session;
+import com.company.entity.Ticket;
+
+import javax.swing.*;
+
+
+
+public class Dialogs {
+
+    public static Ticket buyTicket(Session session) {
+        SpinnerNumberModel numberModel = new SpinnerNumberModel(1, 1, 40, 1);
+        JSpinner places = new JSpinner(numberModel);
+        final JComponent[] inputs = new JComponent[] {
+                new JLabel("Название: " + session.getFilm().getName()),
+                new JLabel("Описание: " + session.getFilm().getDescription()),
+                new JLabel("Начало сеанса: " + session.getStartTime()),
+                new JLabel("Конец сеанса: " + session.getEndTime()),
+                new JLabel("Место: "), places
+        };
+        JOptionPane.showMessageDialog(null, inputs, "Покупка билета", JOptionPane.PLAIN_MESSAGE);
+        int place = (Integer) places.getValue() - 1;
+        if (!session.placeIsFree(place)) {
+            JOptionPane.showMessageDialog(null, "Место занято!");
+            return null;
+        }
+        return new Ticket(session, place);
+    }
+
+}
