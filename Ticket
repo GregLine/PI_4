@@ -1,0 +1,22 @@
+package com.company.entity;
+
+
+public class Ticket {
+    private Session session;
+    private int place;
+
+    public Ticket(Session session, int place) {
+        this.session = session;
+        this.place = place;
+        this.session.removePlace(place);
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+}
