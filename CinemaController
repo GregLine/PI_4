@@ -1,0 +1,68 @@
+package com.company.controllers;
+
+import com.company.entity.Film;
+import com.company.entity.Session;
+import com.company.entity.Ticket;
+import com.company.entity.User;
+import com.company.view.SessionsView;
+import com.company.view.StartView;
+
+import java.util.ArrayList;
+
+public class CinemaController {
+
+    private ArrayList<Session> sessions = new ArrayList<>();
+    private ArrayList<Film> films = new ArrayList<>();
+    private User currentUser;
+    private SessionsView sessionsView = new SessionsView("Сеанс", this);
+    private StartView startView = new StartView("Авторизация", this);
+
+    private static CinemaController instance = null;
+
+    public static CinemaController getInstance() {
+        if (instance == null) {
+            instance = new CinemaController();
+        }
+        return instance;
+    }
+
+    private CinemaController() {
+        Film film1 = new Film("Batman", "триллер", 123);
+        films.add(film1);
+        sessions.add(new Session(film1, "20.00", "21.58"));
+
+        Film film2 = new Film("Spider-man", "фантастика, триллер", 145);
+        films.add(film2);
+        sessions.add(new Session(film2, "12:50", "15:15"));
+
+        Film film3 = new Film("Мальчишник в Вегасе 3!", "Комедия", 120);
+        films.add(film3);
+        sessions.add(new Session(film3, "15:45", "17:55"));
+    }
+
+
+    public ArrayList<Session> getSessions() {
+        return sessions;
+    }
+
+    public void start() {
+        startView.setVisible(true);
+    }
+
+    public void showSessions() {
+        sessionsView.setVisible(true);
+    }
+
+
+    public boolean addTicketToCurrentUser(Ticket ticket) {
+        return currentUser.addTicket(ticket);
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+}
