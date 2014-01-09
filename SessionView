@@ -1,0 +1,76 @@
+package com.company.view;
+
+import com.company.controllers.CinemaController;
+import com.company.entity.Session;
+import com.company.entity.SessionsList;
+import com.company.entity.Ticket;
+
+import javax.swing.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Comparator;
+
+
+public class SessionsView extends JFrame {
+    CinemaController controller;
+
+    SessionsList sessionsList;
+    JTable table;
+
+    private JButton buyTicket = new JButton("Купить билет");
+    private JButton showMyTickets = new JButton("Показать мои билеты");
+
+    public SessionsView(String title, CinemaController controller) throws HeadlessException {
+        super(title);
+        this.controller = controller;
+        createGUI();
+    }
+
+    private void createGUI() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Box main = new Box(BoxLayout.Y_AXIS);
+        table = new JTable();
+        sessionsList = new SessionsList(controller.getSessions());
+        table.setModel(sessionsList);
+
+        main.add(new JScrollPane(table));
+        Box buttonBox = new Box(BoxLayout.X_AXIS);
+        buttonBox.add(buyTicket);
+        buyTicket.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Фильм не выбран");
+                    return;
+                }
+                Ticket ticket;
+                try {
+                    ticket = Dialogs.buyTicket(sessionsList.getSessionAt(table.getSelectedRow()));
+                    if (ticket == null) {
+                        return;
+                    }
+                    controller.addTicketToCurrentUser(ticket);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        showMyTickets.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ProfileView("Мои билеты", controller).setVisible(true);
+            }
+        });
+        buttonBox.add(showMyTickets);
+
+        main.add(buttonBox);
+        getContentPane().add(new JScrollPane(main));
+        setLocationRelativeTo(null);
+        setSize(600, 600);
+    }
+
+
+}
