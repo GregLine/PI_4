@@ -1,0 +1,43 @@
+package com.company.view;
+
+import com.company.controllers.CinemaController;
+import com.company.entity.SessionsList;
+import com.company.entity.Ticket;
+import com.company.entity.TicketsList;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class ProfileView extends JFrame {
+    CinemaController controller;
+
+    JTable ticketTable;
+    TicketsList ticketsList;
+
+    public ProfileView(String title, CinemaController controller) throws HeadlessException {
+        super(title);
+        this.controller = controller;
+        createGUI();
+    }
+
+    private void createGUI() {
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        Box main = new Box(BoxLayout.Y_AXIS);
+        ticketTable = new JTable();
+        ticketsList = new TicketsList(controller.getCurrentUser().getTickets());
+        ticketTable.setModel(ticketsList);
+
+        main.add(new JLabel("Имя: " + controller.getCurrentUser().getName()
+                + ", куплено билетов: " + controller.getCurrentUser().getTickets().size()));
+        main.add(new JScrollPane(ticketTable));
+
+        getContentPane().add(new JScrollPane(main));
+        setLocationRelativeTo(null);
+        setSize(600, 600);
+    }
+
+
+}
