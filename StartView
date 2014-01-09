@@ -1,0 +1,52 @@
+package com.company.view;
+
+import com.company.controllers.CinemaController;
+import com.company.entity.User;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class StartView extends JFrame {
+
+    CinemaController cinemaController = null;
+
+    JTextField name = new JTextField();
+
+    public StartView(String title, CinemaController cinemaController) throws HeadlessException {
+        super(title);
+        this.cinemaController = cinemaController;
+        createGUI();
+    }
+
+    private void createGUI() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        Box main = new Box(BoxLayout.Y_AXIS);
+        main.add(new JLabel("Введите ваше имя:"));
+        main.add(name);
+        JButton okButton = new JButton("Подтвердить");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!name.getText().isEmpty()) {
+                    User user = new User(name.getText());
+                    cinemaController.setCurrentUser(user);
+                    setVisible(false);
+                    cinemaController.showSessions();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Вы не ввели логин!");
+                }
+            }
+        });
+        main.add(okButton);
+        panel.add(main);
+        getContentPane().add(panel);
+        setLocationRelativeTo(null);
+        setSize(600, 600);
+    }
+
+
+}
